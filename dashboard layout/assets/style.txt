@@ -1,0 +1,7 @@
+.rc-slider-track {
+  position: absolute;
+  left: 0;
+  height: 4px;
+  border-radius: 6px;
+  background-color: #3266c1 !important;
+}
