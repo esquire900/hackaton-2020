@@ -133,6 +133,7 @@ card_content_temperatuur = [
     dbc.CardBody(
         [
             html.P("Gemiddelde temeperatuur afgelopen 20 jaar"),
+            html.Div(id="value_temp_init"),
             html.Div(id="kaart_temperatuur", children=[]),
         ]
     ),
@@ -159,7 +160,7 @@ card_content_biodiversiteit = [
     dbc.CardBody(
         [
             html.P("Gemiddeld aantal waarnemingen per jaar"),
-            html.Div(id="value_bio"),
+            html.Div(id="value_bio_init"),
             html.Div(id="kaart_biodiversiteit", children=[]),
         ]
     ),
@@ -185,7 +186,8 @@ card_content_kosten = [
     ),
     dbc.CardBody(
         [
-            html.P("Geschat finacieel voordeel op basis van subsidie"),
+            html.Div("Geschat financieel voordeel op basis van subsidie"),
+            html.Div(id="value_kosten_init"),
             html.Div(id="kaart_kosten", children=[]),
         ]
     ),
@@ -343,11 +345,21 @@ app.layout = html.Div([sidebar, content])
         dash.dependencies.Output(
             component_id="kaart_biodiversiteit", component_property="children"
         ),
-        dash.dependencies.Output(
-            component_id="value_bio", component_property="children",
-        ),
+
         dash.dependencies.Output(
             component_id="kaart_kosten", component_property="children"
+        ),
+
+        dash.dependencies.Output(
+            component_id="value_temp_init", component_property="children",
+        ),
+
+        dash.dependencies.Output(
+            component_id="value_bio_init", component_property="children",
+        ),
+
+        dash.dependencies.Output(
+            component_id="value_kosten_init", component_property="children",
         ),
     ],
     [dash.dependencies.Input(component_id="buurt_keuze", component_property="value")],
@@ -378,6 +390,9 @@ def update_startvalues(buurtkeuze):
         id="progress_temperatuur",
         style={"height": "30px", "font-size": "20px"}
     )
+    temp = df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "stemp"].values[0]
+    value_temp_init = html.Div("Huidige temperatuur: {}".format(temp), id="value_temp")
+
     value_biodiversiteit = dbc.Progress(
         children=str(
             int(
@@ -398,21 +413,26 @@ def update_startvalues(buurtkeuze):
         style={"height": "30px", "font-size": "20px"}
     )
 
-    value_bio = html.Div(df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "fauna_observaties"].values[
-                             0
-                         ])
+    n_waarnemingen = df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "fauna_observaties"].values[0]
+
+    value_bio_init = html.Div("Huidige waarnemingen: {}".format(n_waarnemingen), id="value_bio", )
+    kosten = df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "premie_huidige"].values[0]
     value_kosten = dbc.Progress(
         children=df_breda.loc[
             df_breda.BU_NAAM == buurtkeuze, "premie_huidige_f"
         ].values[0],
-        value=df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "premie_huidige"].values[0],
+        value=kosten,
         color="success",
         striped=True,
         id="progress_kosten",
-        max=3000000,
+        max=1,
         style={"height": "30px", "font-size": "20px"}
     )
-    return m_figure, value_slider, value_temperatuur, value_biodiversiteit, value_bio, value_kosten
+    value_kosten_init = html.Div(
+        "Huidige waarde: €{} k".format(round(kosten / 1000),
+                                       id="value_kosten"))
+
+    return m_figure, value_slider, value_temperatuur, value_biodiversiteit, value_kosten, value_temp_init, value_bio_init, value_kosten_init
 
 
 # In[11]:
@@ -433,8 +453,9 @@ def update_startvalues(buurtkeuze):
         dash.dependencies.Output(
             component_id="progress_biodiversiteit", component_property="children"
         ),
-        # dash.dependencies.Output(component_id='progress_kosten', component_property='value'),
-        # dash.dependencies.Output(component_id='progress_kosten', component_property='children'),
+        dash.dependencies.Output(component_id='progress_kosten', component_property='value'),
+        dash.dependencies.Output(component_id='progress_kosten', component_property='children'),
+
     ],
     [
         dash.dependencies.Input(component_id="slider", component_property="value"),
@@ -442,26 +463,21 @@ def update_startvalues(buurtkeuze):
     ],
 )
 def update_effects(slider_value, buurtkeuze):
-    start_value_slider = df_breda.loc[
-        df_breda.BU_NAAM == buurtkeuze, "perc_groen"
-    ].values[0]
-    start_value_slider_evi = ffit(start_value_slider)
-    end_value_slider = slider_value
-    end_value_slider_evi = ffit(end_value_slider)
+    buurt = df_breda[df_breda.BU_NAAM == buurtkeuze].iloc[0]  # pd.Series
+    start_value_slider_evi = ffit(buurt.perc_groen)
+    end_value_slider_evi = ffit(slider_value)
+    slider_diff = end_value_slider_evi - start_value_slider_evi
 
-    start_temp = df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "stemp"].values[0]
-    start_biodiversiteit = df_breda.loc[
-        df_breda.BU_NAAM == buurtkeuze, "fauna_observaties"
-    ].values[0]
-    # start_kosten = df_breda['kosten'][buurtkeuze]
+    start_temp = buurt.stemp
+    start_biodiversiteit = buurt.fauna_observaties
+    start_kosten = buurt.premie_huidige
 
-    effect_temp = start_temp + (
-            (end_value_slider_evi - start_value_slider_evi) * -0.0012
+    effect_temp = start_temp + (slider_diff * -0.0012)
+    effect_biodiversiteit = start_biodiversiteit + slider_diff * 0.679
+    value_kosten = (slider_value) / 100
+    string_kosten = "€ {}k".format(
+        np.round(((slider_value) / 100) * (buurt.premie_nog_te_halen + buurt.premie_huidige) / 1000, 0)
     )
-    effect_biodiversiteit = start_biodiversiteit + (
-            (end_value_slider_evi - start_value_slider_evi) * 0.679
-    )
-    # effect_kosten = start_kosten + ((end_value_slider_evi - start_value_slider_evi) * <<waarde kosten per evi punt>>)
 
     value_temperatuur = np.round(effect_temp, 1)
     string_temperatuur = str(np.round(effect_temp, 1)) + "°C"
@@ -470,15 +486,15 @@ def update_effects(slider_value, buurtkeuze):
     if value_biodiversiteit < 0:
         value_biodiversiteit = 0
         string_biodiversiteit = "0 waarnemingen"
-    # value_kosten = np.round(effect_kosten, 0)
-    # string_kosten = str(np.round(effect_kosten, 0))+" €"
 
     return (
         value_temperatuur,
         string_temperatuur,
         value_biodiversiteit,
         string_biodiversiteit,
-    )  # , value_kosten, string_kosten
+        value_kosten,
+        string_kosten
+    )
 
 
 # In[ ]:
