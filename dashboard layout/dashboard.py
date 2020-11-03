@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+go#!/usr/bin/env python
 # coding: utf-8
 
 # In[1]:
@@ -83,6 +83,7 @@ breda = fig
 
 
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
+ app.title = 'Bladboard Breda'
 
 # define styling
 
@@ -132,7 +133,7 @@ card_content_temperatuur = [
     ),
     dbc.CardBody(
         [
-            html.P("Gemiddelde temeperatuur afgelopen 20 jaar"),
+            html.P("Gemiddelde temperatuur afgelopen 20 jaar"),
             html.Div(id="value_temp_init"),
             html.Div(id="kaart_temperatuur", children=[]),
         ]
@@ -146,7 +147,7 @@ card_content_biodiversiteit = [
             dbc.Row(
                 children=[
                     html.Img(src=app.get_asset_url("biodiversiteit.svg"), height="25px"),
-                    html.H5("Fauna waarneming", className="card-title"),
+                    html.H5("Fauna waarnemingen", className="card-title"),
                     dbc.CardLink(
                         "[meer informatie]",
                         href="https://htmlpreview.github.io/?https://github.com/esquire900/hackaton-2020/blob/master/waarnemingen/dashboard-export.html",
@@ -159,7 +160,7 @@ card_content_biodiversiteit = [
     ),
     dbc.CardBody(
         [
-            html.P("Gemiddeld aantal waarnemingen per jaar"),
+            html.P("Gemiddeld aantal fauna waarnemingen per jaar"),
             html.Div(id="value_bio_init"),
             html.Div(id="kaart_biodiversiteit", children=[]),
         ]
@@ -186,7 +187,7 @@ card_content_kosten = [
     ),
     dbc.CardBody(
         [
-            html.Div("Geschat financieel voordeel op basis van subsidie"),
+            html.Div("Geschat maatschappelijk financieel voordeel op basis van groen subsidie"),
             html.Div(id="value_kosten_init"),
             html.Div(id="kaart_kosten", children=[]),
         ]
@@ -195,18 +196,10 @@ card_content_kosten = [
 
 # card content groen
 card_content_groen = [
-    dbc.CardHeader(
-        [
-            dbc.Row(
-                children=[html.H5("Groen, groener, groenst!", className="card-title", style="padding-left:30px")]
-            ),
-        ],
-        style={"height": "3rem"},
-    ),
     dbc.CardBody(
         [
             html.P(
-                "Het planten van bomen, vaste planten, bloembollen en andere vormen van groen heeft veel voordelen zoals o.a. verbetering van het leefklimaat (temperatuur), een betere waterhuishouding, ondersteuning van de biodiversiteit en verbetering van de luchtkwaliteit. Daarnaast heeft het ook positieve effecten op gezondheid en welzijn, creëert het een sociale ontmoetingsruimte en biedt het meer ruimte voor beweging."
+                "Het planten van groen heeft veel voordelen zoals o.a. verbetering van het leefklimaat (temperatuur), een betere waterhuishouding, ondersteuning van de biodiversiteit en verbetering van de luchtkwaliteit. Daarnaast heeft het ook positieve effecten op oa. gezondheid en welzijn, creëert het een sociale ontmoetingsruimte en biedt het meer ruimte voor beweging. Vergroenen, DOEN!"
             )
         ],
     ),
@@ -219,10 +212,10 @@ card_content_groen = [
 # define dashboard layout
 sidebar = html.Div(
     [
-        html.H3("Vergroening Breda", className="display-5"),
+        html.H3("Bladboard Breda", className="display-5"),
         html.Hr(),
         dcc.Markdown(
-            "Selecteer een buurt in Breda en bekijk de huidige status van vergroening in die buurt (gebaseerd op [Groenkaart RIVM] (https://data.overheid.nl/dataset/6607-groenkaart-van-nederland)). Verplaats daarna de slider onderaan de plot om het effect van vergroening te zien op de hittestress, biodiversiteit en kosten van die buurt.",
+            "Selecteer jouw buurt en pas de slider aan om het effect te zien van vergroening.",
             className="lead",
         ),
         dcc.Dropdown(
@@ -233,27 +226,26 @@ sidebar = html.Div(
         dcc.Graph(id="mapbox_figure", figure=breda, style={"margin-top": "1rem"}),
         dbc.FormGroup(
             [
-                dbc.Label("Hoe groen is uw wijk?", html_for="slider",
+                dbc.Label("Hoe groen is jouw wijk?", html_for="slider",
                           style={'font-size': '24px', 'font-weight': "900"}),
+                dcc.Markdown("Percentage groen (%)"),
                 dcc.Slider(
                     id="slider",
-                    min=0,
-                    max=100,
+                    min=10,
+                    max=90,
                     step=1,
                     value=0,
                     tooltip={"style": {"color": "green"}},
                     marks={
-                        0: {"label": "0", "style": {"color": "green"}},
-                        10: {"label": "10", "style": {"color": "green"}},
-                        20: {"label": "20", "style": {"color": "green"}},
-                        30: {"label": "30", "style": {"color": "green"}},
-                        40: {"label": "40", "style": {"color": "green"}},
-                        50: {"label": "50", "style": {"color": "green"}},
-                        60: {"label": "60", "style": {"color": "green"}},
-                        70: {"label": "70", "style": {"color": "green"}},
-                        80: {"label": "80", "style": {"color": "green"}},
-                        90: {"label": "90", "style": {"color": "green"}},
-                        100: {"label": "100", "style": {"color": "green"}},
+                        10: {"label": "10%", "style": {"color": "black"}},
+                        20: {"label": "20%", "style": {"color": "grey"}},
+                        30: {"label": "30%", "style": {"color": "darkGrey"}},
+                        40: {"label": "40%", "style": {"color": "silver"}},
+                        50: {"label": "50%", "style": {"color": "lightGreen"}},
+                        60: {"label": "60%", "style": {"color": "paleGreen"}},
+                        70: {"label": "70%", "style": {"color": "springGreen"}},
+                        80: {"label": "80%", "style": {"color": "forestGreen"}},
+                        90: {"label": "90%", "style": {"color": "darkgreen"}},
                     },
                     included=False,
                 ),
