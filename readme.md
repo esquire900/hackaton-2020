@@ -2,7 +2,7 @@
 <h1> <img src="video/bladboard-logo.png"
   width="150"
   style="float:left;">
-    Bladboard Breda
+    Bladboard Breda  
 
 
 Deze repo bevat de analyse en code van team6 voor de 2020 hackaton van [de gezonde brabantse stad](gezondebrabantsestad.nl).
