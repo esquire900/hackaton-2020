@@ -1,8 +1,8 @@
-# Hackaton 2020 team6
-
+# Bladboard Breda 
+<img alt="" src="video/bladboard-logo.png" width="200" style="right: 0 px; display: absolute"/>
 Deze repo bevat de analyse en code van team6 voor de 2020 hackaton van [de gezonde brabantse stad](gezondebrabantsestad.nl).
 
-![](./dashboard%20layout/demo%20dashboard%20vergroening%20breda%20v2.png)
+![](bladboard.png)
 
 Onze hoofdvraag is:
 
