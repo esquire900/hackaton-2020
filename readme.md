@@ -11,7 +11,7 @@ Hoe kunnen we burgers stimuleren burgers om hun perceel te vergroenen?
 ```
 
 Dat vergroening een significante bijdrage levert aan het tegengaan van droogte is al lang bekend. Er bestaan al complexe
-dashboards en analyzes die in detail laten zien wat de effecten van vergroening zijn. Op websites als www.maakgrijsgroener.nl
+dashboards en analyses die in detail laten zien wat de effecten van vergroening zijn. Op websites als www.maakgrijsgroener.nl
 en www.huisjeboompjebeter.nl kunnen mensen makkelijk zien wat ze zelf aan biodiversiteit kunnen doen. Wat mist is 
 een simpel, kwantitatief overzicht wat de directe effecten van vergroening zijn. Een dashboard waar mensen
 in een oogopslag kunnen zien hoe groen hun wijk is, en wat het effect is als zij zich er meer voor zouden inspannen. 
