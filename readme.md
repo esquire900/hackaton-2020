@@ -5,7 +5,7 @@
     Bladboard Breda  </h1>
 
   
-Deze repo bevat de analyse en code van team6 voor de 2020 hackaton van [de gezonde brabantse stad](gezondebrabantsestad.nl).
+Deze repo bevat de analyse en code van team6 voor de 2020 hackaton van [de gezonde brabantse stad](gezondebrabantsestad.nl). Voor een live versie van het dashboard bezoek, http://dashboard-bladboard.herokuapp.com/.
 
 [![BLADBOARD Is AWESOME](https://yt-embed.herokuapp.com/embed?v=-Clmnfjcl4g)](https://www.youtube.com/watch?v=-Clmnfjcl4g "BLADBOARD is AWESOME")
 
