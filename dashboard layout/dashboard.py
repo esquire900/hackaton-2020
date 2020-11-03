@@ -4,7 +4,6 @@
 # In[1]:
 
 
-get_ipython().run_line_magic('load_ext', 'lab_black')
 import dash
 import dash_bootstrap_components as dbc
 import dash_core_components as dcc
@@ -159,7 +158,8 @@ card_content_biodiversiteit = [
     ),
     dbc.CardBody(
         [
-            html.P("Gemiddeld aantal waarnemeingen per jaar"),
+            html.P("Gemiddeld aantal waarnemingen per jaar"),
+            html.Div(id="value_bio"),
             html.Div(id="kaart_biodiversiteit", children=[]),
         ]
     ),
@@ -231,7 +231,8 @@ sidebar = html.Div(
         dcc.Graph(id="mapbox_figure", figure=breda, style={"margin-top": "1rem"}),
         dbc.FormGroup(
             [
-                dbc.Label("% vergroening", html_for="slider"),
+                dbc.Label("Hoe groen is uw wijk?", html_for="slider",
+                          style={'font-size': '24px', 'font-weight': "900"}),
                 dcc.Slider(
                     id="slider",
                     min=0,
@@ -343,6 +344,9 @@ app.layout = html.Div([sidebar, content])
             component_id="kaart_biodiversiteit", component_property="children"
         ),
         dash.dependencies.Output(
+            component_id="value_bio", component_property="children",
+        ),
+        dash.dependencies.Output(
             component_id="kaart_kosten", component_property="children"
         ),
     ],
@@ -372,6 +376,7 @@ def update_startvalues(buurtkeuze):
         striped=True,
         max=30,
         id="progress_temperatuur",
+        style={"height": "30px", "font-size": "20px"}
     )
     value_biodiversiteit = dbc.Progress(
         children=str(
@@ -385,11 +390,17 @@ def update_startvalues(buurtkeuze):
         value=df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "fauna_observaties"].values[
             0
         ],
+
         color="success",
         striped=True,
         id="progress_biodiversiteit",
         max=3000,
+        style={"height": "30px", "font-size": "20px"}
     )
+
+    value_bio = html.Div(df_breda.loc[df_breda.BU_NAAM == buurtkeuze, "fauna_observaties"].values[
+                             0
+                         ])
     value_kosten = dbc.Progress(
         children=df_breda.loc[
             df_breda.BU_NAAM == buurtkeuze, "premie_huidige_f"
@@ -399,9 +410,9 @@ def update_startvalues(buurtkeuze):
         striped=True,
         id="progress_kosten",
         max=3000000,
+        style={"height": "30px", "font-size": "20px"}
     )
-
-    return m_figure, value_slider, value_temperatuur, value_biodiversiteit, value_kosten
+    return m_figure, value_slider, value_temperatuur, value_biodiversiteit, value_bio, value_kosten
 
 
 # In[11]:
