@@ -1,6 +1,7 @@
 # Hackaton 2020 team6
 
-Deze repo bevat de analyse en code van team6 voor de 2020 hackaton van [de gezonde brabantse stad](gezondebrabantsestad.nl), voor het dashboard ga naar, http://dashboard-bladboard.herokuapp.com/.
+  
+Deze repo bevat de analyse en code van team6 voor de 2020 hackaton van [de gezonde brabantse stad](gezondebrabantsestad.nl). Voor een live versie van het dashboard bezoek, http://dashboard-bladboard.herokuapp.com/.
 
 ![](./dashboard%20layout/demo%20dashboard%20vergroening%20breda%20v2.png)
 
